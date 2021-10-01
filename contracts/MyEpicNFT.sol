@@ -6,8 +6,9 @@ import "hardhat/console.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "./libraries/Base64.sol";
+import "./resources/Words.sol";
 
-contract MyEpicNFT is ERC721URIStorage {
+contract MyEpicNFT is ERC721URIStorage, Words {
 
     // Include functionality of the Counters contract from the @openzeppelin Library
     using Counters for Counters.Counter;
@@ -34,10 +35,10 @@ contract MyEpicNFT is ERC721URIStorage {
     }
 
     // ERC721 ("SquareNFT", "SQUARE") "calls" the constructor or the parent contract ERC721
-    constructor() ERC721 ("SquareNFT", "SQUARE") {
-        wordLibrary[0] = ["Abnormally","Abruptly","Absently","Accidentally","Accusingly","Actually","Adventurously","Adversely","Amazingly","Angrily","Anxiously","Arrogantly","Awkwardly","Badly","Bashfully"];
-        wordLibrary[1] = ["Abundant","Accurate","Addicted","Adorable","Adventurous","Afraid","Aggressive","Alcoholic","Alert","Aloof","Ambitious","Ancient","Angry","Animated","Annoying"];
-        wordLibrary[2] = ["Boris","Aleksandr","Igor","Nikita","Timofey","Vadim","Ilya","Jaroslav","Ruslan","Anastasia","Ekaterina","Alyona","Mila","Viktoria","Sasha","Inessa"];
+    constructor() ERC721 ("PeculiarNFT", "PECULIAR") {
+        wordLibrary[0] = adverbs;
+        wordLibrary[1] = adjectives;
+        wordLibrary[2] = names;
     }
 
     // A function our user will hit from the front-end to get their NFT
