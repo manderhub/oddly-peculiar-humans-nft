@@ -19,12 +19,6 @@ const main = async () => {
     // wait for it to be minted
     await txn.wait();
 
-    // Mint another NFT
-    txn = await nftContract.makeAnEpicNFT();
-    await txn.wait();
-
-
-
 };
 
 const runMain = async () => {

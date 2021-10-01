@@ -5,6 +5,7 @@ pragma solidity ^0.8.0;
 import "hardhat/console.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
+import "./libraries/Base64.sol";
 
 contract MyEpicNFT is ERC721URIStorage {
 
@@ -48,15 +49,36 @@ contract MyEpicNFT is ERC721URIStorage {
 
         string memory tripleWord = generateRandomTriple(newItemId);
         string memory finalSvg = string(abi.encodePacked(baseSvg, tripleWord, "</text></svg>"));
+
+        // Get all the JSON metadata in place and base64 encode it
+        string memory jsonEncoded = Base64.encode(
+            bytes(
+                string(
+                    abi.encodePacked(
+                        '{"name": "',
+                        // Set the title of the NFT as the generated word.
+                        tripleWord,
+                        '", "description": "Oddly peculiar humans.", "image": "data:image/svg+xml;base64,',
+                        // append the base64 encoded svg
+                        Base64.encode(bytes(finalSvg)),
+                        '"}'
+                    )
+                )
+            )
+        );
+
+        // Prepend data:application/json;base64 to our data
+        string memory finalTokenUri = string(abi.encodePacked("data:application/json;base64,", jsonEncoded));
+
         console.log("\n-------------------");
-        console.log(finalSvg);
-        console.log("\n-------------------");
+        console.log(finalTokenUri);
+        console.log("-------------------\n");
 
         // Mint the NFT with id newItemId to the user with address msg.sender.
         _safeMint(msg.sender, newItemId);
 
         // Set the NFTs unique identifier along with the data associated w/ that unique identifier.
-        _setTokenURI(newItemId, "PLACEHOLDER");
+        _setTokenURI(newItemId, finalTokenUri);
         console.log("An NFT w/ ID %s has been minted to %s", newItemId, msg.sender);
 
         // Increment the counter for when the next NFT is minted.
