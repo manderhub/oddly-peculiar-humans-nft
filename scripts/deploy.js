@@ -14,11 +14,14 @@ const main = async () => {
     // output the address of our contract on the local blockchain
     console.log("Contract deployed to:", nftContract.address);
 
+    /*
     // Call the function
     let txn = await nftContract.makeAnEpicNFT();
     // wait for it to be minted
+    
     await txn.wait();
     console.log("Minted NFT #1")
+    */
 
 };
 
