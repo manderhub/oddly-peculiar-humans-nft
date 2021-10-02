@@ -1,15 +1,10 @@
-# Basic Sample Hardhat Project
+# _buildspace NFT Project
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, a sample script that deploys that contract, and an example of a task implementation, which simply lists the available accounts.
+This project was created during the _buildspace NFT project course.
+The contract is deployed to Rinkeby Testnet and the frontend React dApp was shipped with Replit at https://oddly-peculiar-humans.manderhub.repl.co/
 
-Try running some of the following tasks:
+Try running it locally with:
 
 ```shell
-npx hardhat accounts
-npx hardhat compile
-npx hardhat clean
-npx hardhat test
-npx hardhat node
-node scripts/sample-script.js
-npx hardhat help
+npx hardhat run scripts/run.js
 ```
