@@ -16,10 +16,16 @@ contract MyEpicNFT is ERC721URIStorage, Words {
     Counters.Counter private _tokenIds;
 
     // base SVC code string
-    string baseSvg = "<svg xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='xMinYMin meet' viewBox='0 0 350 350'><style>.base { fill: white; font-family: serif; font-size: 24px; }</style><rect width='100%' height='100%' fill='black' /><text x='50%' y='50%' class='base' dominant-baseline='middle' text-anchor='middle'>";
+    string svgPartOne = "<svg xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='xMinYMin meet' viewBox='0 0 350 350'><style>.base { fill: '#2D2424'; font-family: serif; font-size: 24px; }</style><rect width='100%' height='100%' fill='";
+    string svgPartTwo = "'/><text x='50%' y='50%' class='base' dominant-baseline='middle' text-anchor='middle'>";
     
     // 2-dimensional array of 3 dynamic arrays
     string[][3] wordLibrary;
+
+    string[] colors = ["#DBD0C0", "#FAEEE0", "#F9E4C8", "#F9CF93", "#7D5A50","#B4846C","#E5B299","#FCDEC0","#493323","#91684A","#EAAC7F","#FFDF91","#F54748"];
+
+    // Event to notify frontend about nft id
+    event NewEpicNFTMinted(address sender, uint256 tokenId);
 
     function generatePseudoRandomIndex(string memory _input) private view returns (uint) {
         return uint(keccak256(abi.encodePacked(block.difficulty, block.timestamp, _input)));
@@ -32,6 +38,10 @@ contract MyEpicNFT is ERC721URIStorage, Words {
             triple = string(abi.encodePacked(triple, word));
         }
         return triple;
+    }
+
+    function generateRandomColor(uint _input, string memory _word) private view returns (string memory) {
+        return colors[generatePseudoRandomIndex(string(abi.encodePacked(_word, Strings.toString(_input)))) % colors.length];
     }
 
     // ERC721 ("SquareNFT", "SQUARE") "calls" the constructor or the parent contract ERC721
@@ -49,7 +59,8 @@ contract MyEpicNFT is ERC721URIStorage, Words {
         uint256 newItemId = _tokenIds.current();
 
         string memory tripleWord = generateRandomTriple(newItemId);
-        string memory finalSvg = string(abi.encodePacked(baseSvg, tripleWord, "</text></svg>"));
+        string memory color = generateRandomColor(newItemId, tripleWord);
+        string memory finalSvg = string(abi.encodePacked(svgPartOne, color, svgPartTwo, tripleWord, "</text></svg>"));
 
         // Get all the JSON metadata in place and base64 encode it
         string memory jsonEncoded = Base64.encode(
@@ -84,5 +95,8 @@ contract MyEpicNFT is ERC721URIStorage, Words {
 
         // Increment the counter for when the next NFT is minted.
         _tokenIds.increment();
+
+        // Emit an Event to the frontend
+        emit NewEpicNFTMinted(msg.sender, newItemId);
     }
 }
