@@ -3,9 +3,11 @@ require('@nomiclabs/hardhat-waffle');
 module.exports = {
   solidity: '0.8.0',
   networks: {
+    hardhat: {
+    },
     rinkeby: {
-      url: 'YOUR ALCHEMY_API_URL',
-      accounts: ['YOUR_PRIVATE_RINKEBY_ACCOUNT_KEY'],
+      url: process.env.STAGING_ALCHEMY_KEY,
+      accounts: [process.env.PRIVATE_KEY]
     },
   },
 };
