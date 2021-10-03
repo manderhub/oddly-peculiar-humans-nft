@@ -6,9 +6,8 @@ import "hardhat/console.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "./libraries/Base64.sol";
-import "./resources/Words.sol";
 
-contract MyEpicNFT is ERC721URIStorage, Words {
+contract MyEpicNFT is ERC721URIStorage {
 
     // Include functionality of the Counters contract from the @openzeppelin Library
     using Counters for Counters.Counter;
@@ -23,6 +22,9 @@ contract MyEpicNFT is ERC721URIStorage, Words {
     string[][3] wordLibrary;
 
     string[] colors = ["#DBD0C0", "#FAEEE0", "#F9E4C8", "#F9CF93", "#7D5A50","#B4846C","#E5B299","#FCDEC0","#493323","#91684A","#EAAC7F","#FFDF91","#F54748"];
+
+    uint8 maxNumberNFT = 50;
+    uint8 numberMintedNFT = 0;
 
     // Event to notify frontend about nft id
     event NewEpicNFTMinted(address sender, uint256 tokenId);
@@ -46,14 +48,96 @@ contract MyEpicNFT is ERC721URIStorage, Words {
 
     // ERC721 ("SquareNFT", "SQUARE") "calls" the constructor or the parent contract ERC721
     constructor() ERC721 ("PeculiarNFT", "PECULIAR") {
-        wordLibrary[0] = adverbs;
-        wordLibrary[1] = adjectives;
-        wordLibrary[2] = names;
+        wordLibrary[0] = [
+            "Awkwardly",
+            "Blissfully",
+            "Carelessly",
+            "Deceivingly",
+            "Elegantly",
+            "Ferociously",
+            "Greedily",
+            "Hopelessly",
+            "Intensely",
+            "Jubilantly",
+            "Knowingly",
+            "Longingly",
+            "Mortally",
+            "Noisily",
+            "Oddly",
+            "Painfully",
+            "Quizzically",
+            "Recklessly",
+            "Sheepishly",
+            "Stubbornly",
+            "Thoroughly",
+            "Unbearably",
+            "Violently",
+            "Wildly",
+            "Youthfully"
+        ];
+        wordLibrary[1] = [
+            "Ancient",
+            "Bizarre",
+            "Damaged",
+            "Damp",
+            "Educated",
+            "Foolish",
+            "Glorious",
+            "Humorous",
+            "Innocent",
+            "Juicy",
+            "Kind",
+            "Lonely",
+            "Magical",
+            "Naughty",
+            "Obnoxious",
+            "Peculiar",
+            "Quiet",
+            "Rude",
+            "Selfish",
+            "Thick",
+            "Unique",
+            "Vulgar",
+            "Wise",
+            "Young",
+            "Zealous"
+        ];
+        wordLibrary[2] = [
+            "Alexei",
+            "Arkadi",
+            "Boris",
+            "Danil",
+            "Eduard",
+            "Fiodor",
+            "Igor",
+            "Leonid",
+            "Maxim",
+            "Nikita",
+            "Oleg",
+            "Pavel",
+            "Stanislav",
+            "Vadim",
+            "Yuri",
+            "Anastasia",
+            "Evelina",
+            "Galina",
+            "Irina",
+            "Ludmila",
+            "Marina",
+            "Olga",
+            "Tatiana",
+            "Viktoria",
+            "Yelena"
+        ];
+    }
+
+    function getTotalNFTsMintedSoFar() public view returns (uint256) {
+        return numberMintedNFT;
     }
 
     // A function our user will hit from the front-end to get their NFT
     function makeAnEpicNFT() public {
-
+        require(numberMintedNFT <= maxNumberNFT, "No more NFTs left to be minted...");
         // Get the current tokenId, this starts at 0.
         // Used to keep track of the NFTs unique identifier.
         uint256 newItemId = _tokenIds.current();
@@ -91,6 +175,7 @@ contract MyEpicNFT is ERC721URIStorage, Words {
 
         // Set the NFTs unique identifier along with the data associated w/ that unique identifier.
         _setTokenURI(newItemId, finalTokenUri);
+        numberMintedNFT++;
         console.log("An NFT w/ ID %s has been minted to %s", newItemId, msg.sender);
 
         // Increment the counter for when the next NFT is minted.
